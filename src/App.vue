@@ -1,11 +1,7 @@
 <template>
   <div>
     <h1>树形组件</h1>
-    <tree-comp
-      v-model:data="data"
-      :show-checkbox="true"
-      @select-change="handleSelectChange"
-    ></tree-comp>
+    <tree-comp :data="data" :show-checkbox="true" @select-change="handleSelectChange"></tree-comp>
   </div>
 </template>
 
@@ -28,14 +24,14 @@ const data = reactive<TreeData>([
           {
             label: '三级 1-1-1',
             checked: false,
-            id: '3'
-          }
-        ]
+            id: '3',
+          },
+        ],
       },
       {
         label: '二级 1-2',
         checked: false,
-        id: '4'
+        id: '4',
       },
       {
         label: '二级 1-3',
@@ -45,11 +41,11 @@ const data = reactive<TreeData>([
           {
             label: '三级 1-3-1',
             checked: false,
-            id: '6'
-          }
-        ]
-      }
-    ]
+            id: '6',
+          },
+        ],
+      },
+    ],
   },
   {
     label: '一级 2',
@@ -64,17 +60,17 @@ const data = reactive<TreeData>([
           {
             label: '三级 2-1-1',
             checked: false,
-            id: '9'
-          }
-        ]
+            id: '9',
+          },
+        ],
       },
       {
         label: '二级 2-2',
         checked: false,
-        id: '10'
-      }
-    ]
-  }
+        id: '10',
+      },
+    ],
+  },
 ])
 
 const handleSelectChange = (data: TreeData) => {

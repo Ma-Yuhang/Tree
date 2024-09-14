@@ -11,9 +11,9 @@
       <TreeComp
         v-if="item.children"
         :data="item.children"
-        :parent="item"
-        :showCheckbox="showCheckbox"
-        :uniqueKey="uniqueKey"
+        :show-checkbox="showCheckbox"
+        :unique-key="uniqueKey"
+        @select-change="selectChange"
       />
     </li>
   </ul>
@@ -22,15 +22,14 @@
 <script setup lang="ts">
 import type { TreeCompProps, Tree } from './type'
 defineOptions({
-  name: 'TreeComp'
+  name: 'TreeComp',
 })
-const { data, showCheckbox = true, uniqueKey = 'id', parent } = defineProps<TreeCompProps>()
+const { data, showCheckbox = true, uniqueKey = 'id' } = defineProps<TreeCompProps>()
 
-const emit = defineEmits(['update:data', 'select-change'])
+const emit = defineEmits(['select-change'])
 const selectChange = (item: Tree) => {
   checkedHandle(item)
-  // emit('update:data', data)
-  // emit('select-change', data)
+  emit('select-change', data)
 }
 const checkedHandle = (item: Tree) => {
   if (item.children) {
@@ -39,11 +38,6 @@ const checkedHandle = (item: Tree) => {
       checkedHandle(child)
     })
   }
-  if (parent) {
-    const checked = parent.children!.every((child) => child.checked)
-    parent.checked = checked
-  }
-  console.log(parent, 'parent')
 }
 </script>
 
