@@ -6,11 +6,11 @@
 </template>
 
 <script setup lang="ts">
-import { reactive } from 'vue'
+import { ref } from 'vue'
 import TreeComp from './components/TreeComp/index.vue'
 import type { TreeData } from '@/components/TreeComp/type.ts'
 
-const data = reactive<TreeData>([
+const data = ref<TreeData>([
   {
     label: '一级 1',
     checked: false,
@@ -61,20 +61,27 @@ const data = reactive<TreeData>([
             label: '三级 2-1-1',
             checked: false,
             id: '9',
+            children: [
+              {
+                label: '四级 2-1-1-1',
+                checked: false,
+                id: '10',
+              },
+            ],
           },
         ],
       },
       {
         label: '二级 2-2',
         checked: false,
-        id: '10',
+        id: '11',
       },
     ],
   },
 ])
 
 const handleSelectChange = (data: TreeData) => {
-  console.log(data)
+  console.log(data, 'data');
 }
 </script>
 

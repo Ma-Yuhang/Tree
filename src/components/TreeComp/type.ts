@@ -12,7 +12,6 @@ export interface TreeCompProps {
    * 树形数据
    */
   data: TreeData
-  parent?: Tree
   /**
    * 是否显示复选框
    */
