@@ -19,7 +19,7 @@ export interface TreeCompProps {
   /**
    * 唯一标识
    */
-  uniqueKey?: Exclude<keyof chooseStringAndNumber<Tree>, 'children'>
+  uniqueKey?: keyof chooseStringAndNumber<Tree>
 }
 
 type chooseStringAndNumber<T extends Record<string, any>> = {
