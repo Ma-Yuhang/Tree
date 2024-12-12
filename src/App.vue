@@ -2,12 +2,14 @@
   <div>
     <h1>树形组件</h1>
     <tree-comp :data="data" :show-checkbox="true" @select-change="handleSelectChange"></tree-comp>
+    <test-tsx />
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue'
 import TreeComp from './components/TreeComp/index.vue'
+import TestTsx from './components/TestTsx/index.tsx'
 import type { TreeData } from '@/components/TreeComp/type.ts'
 
 const data = ref<TreeData>([
@@ -81,7 +83,7 @@ const data = ref<TreeData>([
 ])
 
 const handleSelectChange = (data: TreeData) => {
-  console.log(data, 'data');
+  console.log(data, 'data')
 }
 </script>
 
