@@ -22,6 +22,7 @@
             :show-checkbox="showCheckbox"
             :unique-key="uniqueKey"
             @select-change="$emit('select-change', node)"
+            @child-change="handleChildChange"
           />
         </div>
       </transition>
@@ -30,31 +31,47 @@
 </template>
 
 <script setup lang="ts">
-import { inject, provide, ref } from 'vue'
-import type { TreeCompProps, Tree, TreeData } from './type'
+import { ref } from 'vue'
+import type { TreeCompProps, Tree } from './type'
 defineOptions({
   name: 'TreeComp',
 })
 const { data, showCheckbox = true, uniqueKey = 'id' } = defineProps<TreeCompProps>()
 // 用一个数组存储是否折叠与展开
 const isOpen = ref<boolean[]>(new Array(data.length).fill(true))
-const emit = defineEmits(['select-change'])
+const emit = defineEmits(['select-change', 'child-change'])
 
 // 判断是否有子树
-const hasChildren = (node: Tree) => {
+const hasChildren = (node: Tree): node is Tree & { children: Tree[] } => {
   return !!(node.children && node.children.length > 0)
 }
-// 采用依赖注入的方式拿到父节点（上一级提供父节点这一层的数组，并不是精确的父节点）
-// 这里是递归，上一级提供父节点这一层的数组， 下一级注入父节点这一层的数组
-const parentNode: TreeData | null = inject('parentNode', null)
-provide('parentNode', data)
+
+// 处理子节点的状态变化
+const handleChildChange = (childId: string) => {
+  // 查找包含此childId的节点
+  for (const node of data) {
+    if (hasChildren(node)) {
+      const childIndex = node.children!.findIndex((child) => child[uniqueKey] === childId)
+      if (childIndex !== -1) {
+        // 子节点状态已经变化，现在根据所有子节点的状态更新当前节点
+        const allChildrenChecked = node.children!.every((child) => child.checked)
+        if (node.checked !== allChildrenChecked) {
+          node.checked = allChildrenChecked
+          // 向上传递状态变化
+          emit('child-change', node[uniqueKey])
+        }
+        break
+      }
+    }
+  }
+}
 
 // 复选框变化
 const checkboxChange = (node: Tree) => {
   // 父节点的复选框变化，同步子节点
   const updateChildCheck = (node: Tree) => {
     if (hasChildren(node)) {
-      node.children!.forEach((child) => {
+      node.children.forEach((child) => {
         child.checked = node.checked
         updateChildCheck(child)
       })
@@ -62,26 +79,13 @@ const checkboxChange = (node: Tree) => {
   }
   updateChildCheck(node)
 
-  // 子节点的复选框变化，同步父节点
-  const updateParentCheck = (node: Tree) => {
-    if (parentNode) {
-      ;(parentNode as TreeData).forEach((pNode) => {
-        if (pNode.children?.includes(node)) {
-          // 如果进入此分支，说明当前的 pNode 就是父节点
-          const allChildrenChecked = pNode.children.every((child) => child.checked)
-          if (pNode.checked !== allChildrenChecked) {
-            pNode.checked = allChildrenChecked
-            updateParentCheck(pNode)
-          }
-        }
-      })
-    }
-  }
-  updateParentCheck(node)
+  // 触发子节点变化事件，以便父组件更新
+  emit('child-change', node[uniqueKey])
 
   // 触发自定义事件
   emit('select-change', node)
 }
+
 // 过渡动画相关的方法
 const animation = {
   beforeEnter(el: any) {
