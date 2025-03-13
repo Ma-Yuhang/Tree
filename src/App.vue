@@ -2,14 +2,16 @@
   <div>
     <h1>树形组件</h1>
     <tree-comp :data="data" :show-checkbox="true" @select-change="handleSelectChange"></tree-comp>
-    <!-- <test-tsx /> -->
+    <test-tsx />
+    <test-tsx2 />
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue'
 import TreeComp from './components/TreeComp/index.vue'
-// import TestTsx from './components/TestTsx/index.tsx'
+import TestTsx from './components/TestTsx/index.vue'
+import TestTsx2 from './components/TestTsx/index'
 import type { TreeData } from '@/components/TreeComp/type.ts'
 
 const data = ref<TreeData>([

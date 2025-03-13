@@ -7,9 +7,8 @@ export default defineComponent({
 
     return () => (
       <div>
-        <h1>标题</h1>
-        {/* JSX中的注释写法 */}
-        <div>{count.value}</div>
+        <p>Count: {count.value}</p>
+        <button onClick={() => count.value++}>Increment</button>
       </div>
     )
   },
